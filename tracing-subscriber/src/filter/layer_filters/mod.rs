@@ -470,6 +470,12 @@ impl<L, F, S> Filtered<L, F, S> {
     fn did_enable(&self, f: impl FnOnce()) {
         FILTERING.with(|filtering| filtering.did_enable(self.id(), f))
     }
+
+    /// Gives mutable access to the inner filter, which allows swapping the filter inside a reload handle's [`modify`] method.
+    /// See https://github.com/tokio-rs/tracing/issues/1629#issuecomment-1013538461
+    pub fn filter_mut(&mut self) -> &mut F {
+        &mut self.filter
+    }
 }
 
 impl<S, L, F> Layer<S> for Filtered<L, F, S>
